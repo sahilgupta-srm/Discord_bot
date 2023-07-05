@@ -25,7 +25,7 @@ DEFAULT_WARN=0
 DEFAULT_LIST=''
 XP_MULTIPLIER = 1
 temp=None
-id=[778838412089884692]
+id=[]
 
 
 
@@ -63,7 +63,7 @@ async def on_message(message):
         await message.channel.send(f"{message.author.name} has leveled up to level {new_level}!")
         if(users[user_id]["level"]%10==0 and users[user_id]["level"] not in temp):
             temp.append(users[user_id]["level"])
-            id.append(users[user_id][user_id])
+            id.append(users[user_id])
             await ctx.send(f'You are eligible to use roll command as you reached {users[user_id]["level"]} first')
     await bot.process_commands(message)
 
@@ -165,15 +165,16 @@ async def stats(ctx, member: discord.Member=None):
 @bot.command()
 async def top(ctx):
     guild=ctx.guild
+    s=''
     sorted_users = heapq.nlargest(10, users.items(), key=lambda x: (x[1]["level"], x[1]["xp"]))
-    embed = discord.Embed(title=f"Top Users for {guild.name}", description="Top members of the server", color=discord.Color.red())
     
     for i, (user_id, data) in enumerate(sorted_users):
        
         member = await bot.fetch_user(int(user_id))
         if (users[user_id]["xp"]==0 and users[user_id]["level"]==0):
-            continue
-        embed.add_field(name='',value=f"{i+1}. {member.mention}  {data['level']} level ",inline=False)
+            break
+        s=s+f"{i+1}. {member.mention}  {data['level']} level "
+        embed = discord.Embed(title=f"Top Users for {guild.name}", description=s, color=discord.Color.red())
     await ctx.send(embed=embed)
 
 @bot.command()
